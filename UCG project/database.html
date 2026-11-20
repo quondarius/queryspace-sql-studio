@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090811">
+  <meta name="description" content="A local SQL workspace with a live database diagram, table explorer, and query editor.">
+  <title>Database studio — Queryspace</title>
+  <link rel="stylesheet" href="style.css?v=database-studio-1">
+  <link rel="stylesheet" href="database.css?v=database-studio-1">
+  <script src="workspace.js?v=api-routing-2" defer></script>
+  <script src="database.js?v=api-routing-2" defer></script>
+</head>
+<body class="database-fullpage">
+  <header class="db-topbar">
+    <a class="brand" href="index.html" aria-label="Queryspace home">
+      <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M6 7.5h20M6 16h13M6 24.5h9" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><circle cx="23.5" cy="22.5" r="4.5" fill="currentColor"/><path d="m27 26 2 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+      <span>queryspace</span>
+    </a>
+    <div class="db-top-location"><span class="db-breadcrumb-muted">LOCAL DATABASE</span><span aria-hidden="true">/</span><strong>queryspace.sqlite3</strong></div>
+    <div class="db-top-actions"><span class="db-local-chip"><i></i> LOCAL</span><a class="db-back-link" href="index.html">← Landing page</a></div>
+  </header>
+
+  <main class="db-app-shell">
+    <section class="ide-section db-ide-section" aria-labelledby="db-page-title">
+      <div class="db-page-intro">
+        <div>
+          <div class="db-eyebrow"><span class="db-spark">✦</span> DATABASE STUDIO <span class="db-eyebrow-divider">/</span> QUERYSPACE LOCAL</div>
+          <h1 id="db-page-title">Your data, <span>in orbit.</span></h1>
+          <p>See how tables connect, explore their columns, and run real SQL against your local database.</p>
+        </div>
+        <button class="button button-primary db-import-button" id="ide-import-top" type="button"><span aria-hidden="true">＋</span> Import data</button>
+      </div>
+
+      <div class="ide-layout db-ide-layout">
+        <aside class="ide-sidebar db-sidebar" aria-label="Database tables and saved queries">
+          <div class="ide-db-card">
+            <div class="ide-db-icon" aria-hidden="true">✳</div>
+            <div class="ide-db-copy"><strong>Queryspace local</strong><span>SQLite database</span></div>
+            <span class="ide-live-indicator" id="ide-connection-dot" title="Connecting"></span>
+          </div>
+          <div class="ide-sidebar-block">
+            <div class="ide-sidebar-heading"><span>TABLES</span><span class="ide-section-count" id="ide-table-count">—</span></div>
+            <label class="ide-search-label" for="ide-table-search">Filter tables</label>
+            <input id="ide-table-search" class="ide-search" type="search" placeholder="Search tables…" autocomplete="off">
+            <div class="ide-table-list" id="ide-table-list" aria-live="polite"><p class="ide-muted-message">Connecting to the local database…</p></div>
+          </div>
+          <div class="ide-sidebar-block ide-saved-block">
+            <div class="ide-sidebar-heading"><span>SAVED QUERIES</span><button class="ide-heading-action" id="ide-new-query" type="button" aria-label="New SQL query" title="New query">＋</button></div>
+            <div class="ide-saved-list" id="ide-saved-list"><p class="ide-muted-message">Your saved SQL will appear here.</p></div>
+          </div>
+          <div class="ide-sidebar-tip"><span class="tip-star" aria-hidden="true">✦</span><p><strong>Start exploring.</strong> Choose a table to open a ready-to-run query, or import your own data.</p></div>
+        </aside>
+
+        <div class="ide-main-panel db-main-panel">
+          <div class="db-main-toolbar">
+            <div class="db-main-heading"><span class="db-main-icon" aria-hidden="true">⌘</span><div><strong>Database design</strong><span>Live schema · relationships inferred from keys</span></div></div>
+            <div class="db-view-tabs" role="tablist" aria-label="Database workspace view">
+              <button class="db-view-tab is-active" id="db-tab-diagram" type="button" role="tab" aria-selected="true" aria-controls="db-diagram-view"><span aria-hidden="true">◇</span> Diagram</button>
+              <button class="db-view-tab" id="db-tab-sql" type="button" role="tab" aria-selected="false" aria-controls="db-sql-view"><span aria-hidden="true">⌘</span> SQL workspace</button>
+            </div>
+          </div>
+
+          <section class="db-diagram-view" id="db-diagram-view" role="tabpanel" aria-labelledby="db-tab-diagram">
+            <div class="db-canvas-toolbar">
+              <div class="db-canvas-title"><span class="db-canvas-live"></span><strong>Schema canvas</strong><span class="db-canvas-subtitle">Tables and keys from your database</span></div>
+              <div class="db-canvas-stats"><span><b id="db-table-total">—</b> tables</span><span class="db-stat-divider">·</span><span><b id="db-relation-total">—</b> relationships</span></div>
+            </div>
+            <div class="db-canvas-viewport" id="db-canvas-viewport" aria-label="Visual database schema">
+              <div class="db-canvas" id="db-canvas">
+                <svg class="db-connectors" id="db-connectors" aria-hidden="true"></svg>
+                <div class="db-card-grid" id="db-table-cards"><div class="db-loading">Mapping your database tables…</div></div>
+              </div>
+            </div>
+            <div class="db-canvas-footer"><span class="db-legend-line"></span><span>Known or matching key</span><span class="db-legend-note" id="db-diagram-status">Import tables to expand your schema</span></div>
+          </section>
+
+          <section class="db-sql-view" id="db-sql-view" role="tabpanel" aria-labelledby="db-tab-sql" hidden>
+            <div class="ide-toolbar">
+              <div class="ide-breadcrumb"><span>Workspace</span><span aria-hidden="true">/</span><strong id="ide-query-title">Active customers</strong></div>
+              <div class="ide-toolbar-actions">
+                <button class="ide-quiet-button" id="ide-copy-query" type="button" title="Copy SQL">▢ <span>Copy</span></button>
+                <button class="ide-quiet-button" id="ide-save-query" type="button" title="Save this query">♡ <span>Save query</span></button>
+              </div>
+            </div>
+            <div class="ide-editor-label"><span><i></i> SQL editor</span><span class="ide-sql-badge">SQLite</span></div>
+            <label class="sr-only" for="ide-query-input">Write a SQL query</label>
+            <div class="ide-editor-wrap">
+              <div class="ide-line-numbers" id="ide-line-numbers" aria-hidden="true">1</div>
+              <textarea class="ide-query-input" id="ide-query-input" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Write a SQL query">SELECT customer_name, plan, monthly_spend, city
+FROM customers
+WHERE status = 'active'
+ORDER BY monthly_spend DESC
+LIMIT 10;</textarea>
+            </div>
+            <div class="ide-runbar">
+              <button class="button ide-run-button" id="ide-run-query" type="button"><span aria-hidden="true">▶</span> Run SQL <kbd>Ctrl ↵</kbd></button>
+              <span class="ide-run-status" id="ide-run-status">Ready · sample database</span>
+            </div>
+            <div class="ide-results-panel">
+              <div class="ide-results-heading">
+                <div class="ide-view-tabs" role="tablist" aria-label="Query output">
+                  <button class="ide-view-tab is-active" type="button" role="tab" aria-selected="true" data-ide-view="results">Results <span class="ide-results-count" id="ide-results-count">—</span></button>
+                  <button class="ide-view-tab" type="button" role="tab" aria-selected="false" data-ide-view="schema">Schema</button>
+                </div>
+                <span class="ide-elapsed" id="ide-elapsed"></span>
+              </div>
+              <div class="ide-result-scroll" id="ide-result-scroll">
+                <table class="ide-data-table" aria-label="SQL query results"><thead id="ide-result-head"></thead><tbody id="ide-result-body"></tbody></table>
+                <div class="ide-empty-state" id="ide-empty-state">Run a query to see its results here.</div>
+              </div>
+              <div class="ide-results-footer"><span id="ide-row-summary">Choose a table or run a query.</span><button class="ide-export-button" id="ide-export-results" type="button" disabled>Export CSV <span aria-hidden="true">↓</span></button></div>
+            </div>
+            <div class="ide-statusbar"><span><i></i> Local SQLite · data stays on this device</span><span id="ide-db-name">Persistent database</span></div>
+          </section>
+        </div>
+      </div>
+      <p class="ide-local-note db-local-note"><span aria-hidden="true">⌁</span> No account needed. Your data stays on this computer. <span>Press Ctrl+Enter to run a SQL query.</span></p>
+    </section>
+  </main>
+
+  <input id="ide-file-input" class="sr-only" type="file" accept=".csv,.tsv,.txt,.xlsx,.xlsm,.xls" aria-label="Choose a CSV or Excel file">
+  <dialog class="ide-dialog" id="ide-import-dialog" aria-labelledby="ide-import-title">
+    <form id="ide-import-form">
+      <div class="ide-dialog-head"><div><span class="section-kicker">Add data to SQLite</span><h2 id="ide-import-title">Import a file</h2></div><button class="ide-dialog-close" id="ide-import-close" type="button" aria-label="Close">×</button></div>
+      <p class="ide-dialog-description" id="ide-import-file-meta">Choose a CSV or Excel workbook to preview its columns.</p>
+      <label class="ide-field-label" for="ide-table-name">Table name</label>
+      <input class="ide-text-field" id="ide-table-name" name="table_name" required maxlength="80" autocomplete="off" placeholder="for example: spring_sales">
+      <div class="ide-worksheet-wrap" id="ide-worksheet-wrap" hidden><label class="ide-field-label" for="ide-worksheet">Excel worksheet</label><select class="ide-text-field" id="ide-worksheet" name="worksheet"></select></div>
+      <div class="ide-import-preview" id="ide-import-preview"><p class="ide-muted-message">File preview will appear here.</p></div>
+      <div class="ide-dialog-message" id="ide-import-message" role="alert"></div>
+      <div class="ide-dialog-actions"><button class="button button-outline" id="ide-import-cancel" type="button">Cancel</button><button class="button button-primary" id="ide-import-confirm" type="submit" disabled>Import table</button></div>
+    </form>
+  </dialog>
+  <dialog class="ide-dialog ide-save-dialog" id="ide-save-dialog" aria-labelledby="ide-save-title">
+    <form id="ide-save-form">
+      <div class="ide-dialog-head"><div><span class="section-kicker">Keep it for later</span><h2 id="ide-save-title">Save this query</h2></div><button class="ide-dialog-close" id="ide-save-close" type="button" aria-label="Close">×</button></div>
+      <p class="ide-dialog-description">Your query will be saved in this local database.</p>
+      <label class="ide-field-label" for="ide-save-name">Query name</label><input class="ide-text-field" id="ide-save-name" required maxlength="100" autocomplete="off" placeholder="e.g. Active customers">
+      <div class="ide-dialog-message" id="ide-save-message" role="alert"></div>
+      <div class="ide-dialog-actions"><button class="button button-outline" id="ide-save-cancel" type="button">Cancel</button><button class="button button-primary" type="submit">Save query</button></div>
+    </form>
+  </dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090811">
+  <meta name="description" content="A local, space-themed SQL workspace. Import CSV and Excel data into a persistent SQLite database and query it in your browser.">
+  <title>Queryspace — Where teams get their data together</title>
+  <link rel="stylesheet" href="style.css?v=local-sqlite-1">
+  <script src="app.js?v=local-sqlite-1" defer></script>
+  <script src="workspace.js?v=api-routing-2" defer></script>
+</head>
+<body>
+  <div class="site-shell">
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="Queryspace home">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M6 7.5h20M6 16h13M6 24.5h9" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><circle cx="23.5" cy="22.5" r="4.5" fill="currentColor"/><path d="m27 26 2 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+        <span>queryspace</span>
+      </a>
+      <button class="mobile-menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="primary-nav">
+        <span></span><span></span>
+      </button>
+      <nav class="primary-nav" id="primary-nav" aria-label="Main navigation">
+        <a href="#features">Product</a>
+        <a href="#integrations">Integrations</a>
+        <a href="#get-started">Get started</a>
+        <a href="#docs">Docs</a>
+      </nav>
+      <div class="header-actions">
+        <a class="sign-in" href="database.html">Sign in</a>
+        <a class="button button-small button-outline" href="database.html">Open the demo <span aria-hidden="true">↗</span></a>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero section-wrap" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <div class="eyebrow"><span class="eyebrow-dot"></span> A SQL workspace for your whole team</div>
+          <h1 id="hero-title">Where teams get their data <span>together.</span></h1>
+          <p class="hero-description">Import spreadsheets, run real SQL against your own tables, and explore clear results in a calm workspace. Your local database stays right here on this device.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="database.html">Open the local workspace <span aria-hidden="true">→</span></a>
+            <a class="text-link" href="#workflow">See how it works <span aria-hidden="true">↓</span></a>
+          </div>
+          <div class="hero-footnote"><span class="sparkle" aria-hidden="true">✳</span> Your local SQLite workspace is just below</div>
+        </div>
+
+        <div class="hero-visual" id="workspace-preview" aria-label="Sample SQL workspace preview">
+          <div class="glow-orb glow-orb-one"></div><div class="glow-orb glow-orb-two"></div>
+          <div class="workspace-card">
+            <div class="workspace-topbar">
+              <div class="window-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+              <div class="workspace-name"><span class="workspace-icon">Q</span><span>Northstar workspace</span><span class="workspace-chevron">⌄</span></div>
+              <div class="connection-pill"><span></span> Sample preview</div>
+            </div>
+            <div class="workspace-body">
+              <aside class="workspace-rail" aria-label="Workspace tools">
+                <button class="rail-button rail-active" type="button" aria-label="SQL editor" title="SQL editor"><svg viewBox="0 0 20 20" fill="none"><path d="m7 5-5 5 5 5M13 5l5 5-5 5M11.5 3 8.5 17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                <button class="rail-button" type="button" aria-label="Tables" title="Tables"><svg viewBox="0 0 20 20" fill="none"><rect x="2.5" y="3" width="15" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M2.5 8h15M7.5 8v9" stroke="currentColor" stroke-width="1.5"/></svg></button>
+                <button class="rail-button" type="button" aria-label="Saved queries" title="Saved queries"><svg viewBox="0 0 20 20" fill="none"><path d="M4 3.5h9l3 3v10H4v-13Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M7 3.5v4h6v-4M7 16v-5h6v5" stroke="currentColor" stroke-width="1.5"/></svg></button>
+              </aside>
+              <div class="workspace-main">
+                <div class="workspace-toolbar">
+                  <div class="breadcrumbs"><span>Queries</span><span class="crumb-slash">/</span><strong>Customer health</strong></div>
+                  <button class="icon-text-button" id="copy-query" type="button" title="Copy SQL query"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="7" y="6" width="9" height="11" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M12.5 6V4.5A1.5 1.5 0 0 0 11 3H5a1.5 1.5 0 0 0-1.5 1.5v8A1.5 1.5 0 0 0 5 14h2" stroke="currentColor" stroke-width="1.5"/></svg><span>Copy SQL</span></button>
+                </div>
+                <div class="query-tabs" role="tablist" aria-label="Sample queries">
+                  <button class="query-tab is-active" type="button" role="tab" aria-selected="true" data-query="customers"><span class="file-glyph">⌘</span> customer-health.sql <span class="tab-close">×</span></button>
+                  <button class="query-tab" type="button" role="tab" aria-selected="false" data-query="revenue"><span class="file-glyph">⌘</span> weekly-revenue.sql <span class="tab-close">×</span></button>
+                  <button class="new-query" type="button" aria-label="New query" title="New query">+</button>
+                </div>
+                <div class="editor-heading"><span><span class="editor-live-dot"></span> Editor</span><span class="editor-language">SQL <span>⌄</span></span></div>
+                <label class="sr-only" for="query-input">Edit the sample SQL query</label>
+                <div class="code-editor">
+                  <div class="line-numbers" aria-hidden="true">1<br>2<br>3<br>4<br>5<br>6<br>7</div>
+                  <textarea id="query-input" aria-label="Edit the sample SQL query" spellcheck="false" autocapitalize="off" autocomplete="off">SELECT
+  customer_name,
+  plan,
+  monthly_spend
+FROM customers
+WHERE status = 'active'
+ORDER BY monthly_spend DESC
+LIMIT 5;</textarea>
+                </div>
+                <div class="run-row">
+                  <button class="button button-run" id="run-query" type="button"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m5.5 3.5 7 4.5-7 4.5v-9Z" fill="currentColor"/></svg><span>Run query</span><kbd>⌘ ↵</kbd></button>
+                  <span class="run-hint">Sample data · safe to experiment</span>
+                </div>
+                <div class="result-panel">
+                  <div class="result-heading">
+                    <div class="result-tabs" role="tablist" aria-label="Query output">
+                      <button class="result-tab is-active" type="button" role="tab" aria-selected="true" data-view="results">Results <span class="result-count">5</span></button>
+                      <button class="result-tab" type="button" role="tab" aria-selected="false" data-view="schema">Schema</button>
+                    </div>
+                    <span class="execution-time" id="execution-time"><span></span> Ready to run</span>
+                  </div>
+                  <div class="table-scroll">
+                    <table class="data-table" aria-label="Sample query results">
+                      <thead id="result-head"></thead>
+                      <tbody id="result-body"></tbody>
+                    </table>
+                  </div>
+                  <div class="result-footer"><span id="row-summary">Showing 5 sample rows</span><button id="export-results" type="button" class="export-button">Export <span aria-hidden="true">↓</span></button></div>
+                </div>
+              </div>
+            </div>
+            <div class="workspace-statusbar"><span><i></i> Sample preview</span><span>Real SQLite workspace below <span class="status-divider">·</span> Data stays local</span></div>
+          </div>
+          <div class="floating-note note-collab"><span class="note-avatars"><i>J</i><i>M</i></span><span>Working together <b>now</b></span><span class="note-pulse"></span></div>
+        </div>
+      </section>
+
+      <section class="ide-section section-wrap" id="workspace" aria-labelledby="ide-title">
+        <div class="ide-intro">
+          <div>
+            <span class="section-kicker">Your local data workspace</span>
+            <h2 id="ide-title">A real database, <span>right here.</span></h2>
+            <p>Import a CSV or Excel workbook, explore its tables, and ask real questions with SQL. Your database stays on this computer.</p>
+          </div>
+          <button class="button button-primary ide-import-top" id="ide-import-top" type="button"><span aria-hidden="true">＋</span> Import data</button>
+        </div>
+
+        <div class="ide-layout">
+          <aside class="ide-sidebar" aria-label="Database tables and saved queries">
+            <div class="ide-db-card">
+              <div class="ide-db-icon" aria-hidden="true">✳</div>
+              <div class="ide-db-copy"><strong>Queryspace local</strong><span>SQLite database</span></div>
+              <span class="ide-live-indicator" id="ide-connection-dot" title="Connecting"></span>
+            </div>
+            <div class="ide-sidebar-block">
+              <div class="ide-sidebar-heading"><span>TABLES</span><span class="ide-section-count" id="ide-table-count">—</span></div>
+              <label class="ide-search-label" for="ide-table-search">Filter tables</label>
+              <input id="ide-table-search" class="ide-search" type="search" placeholder="Search tables…" autocomplete="off">
+              <div class="ide-table-list" id="ide-table-list" aria-live="polite"><p class="ide-muted-message">Connecting to the local database…</p></div>
+            </div>
+            <div class="ide-sidebar-block ide-saved-block">
+              <div class="ide-sidebar-heading"><span>SAVED QUERIES</span><button class="ide-heading-action" id="ide-new-query" type="button" aria-label="New SQL query" title="New query">＋</button></div>
+              <div class="ide-saved-list" id="ide-saved-list"><p class="ide-muted-message">Your saved SQL will appear here.</p></div>
+            </div>
+            <div class="ide-sidebar-tip"><span class="tip-star" aria-hidden="true">✦</span><p><strong>New here?</strong> Click a sample table to see its columns, or import a file to make it queryable.</p></div>
+          </aside>
+
+          <div class="ide-main-panel">
+            <div class="ide-toolbar">
+              <div class="ide-breadcrumb"><span>Workspace</span><span aria-hidden="true">/</span><strong id="ide-query-title">Active customers</strong></div>
+              <div class="ide-toolbar-actions">
+                <button class="ide-quiet-button" id="ide-copy-query" type="button" title="Copy SQL">▢ <span>Copy</span></button>
+                <button class="ide-quiet-button" id="ide-save-query" type="button" title="Save this query">♡ <span>Save query</span></button>
+              </div>
+            </div>
+            <div class="ide-editor-label"><span><i></i> SQL editor</span><span class="ide-sql-badge">SQLite</span></div>
+            <label class="sr-only" for="ide-query-input">Write a SQL query</label>
+            <div class="ide-editor-wrap">
+              <div class="ide-line-numbers" id="ide-line-numbers" aria-hidden="true">1</div>
+              <textarea class="ide-query-input" id="ide-query-input" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Write a SQL query">SELECT customer_name, plan, monthly_spend, city
+FROM customers
+WHERE status = 'active'
+ORDER BY monthly_spend DESC
+LIMIT 10;</textarea>
+            </div>
+            <div class="ide-runbar">
+              <button class="button ide-run-button" id="ide-run-query" type="button"><span aria-hidden="true">▶</span> Run SQL <kbd>Ctrl ↵</kbd></button>
+              <span class="ide-run-status" id="ide-run-status">Ready · sample database</span>
+            </div>
+
+            <div class="ide-results-panel">
+              <div class="ide-results-heading">
+                <div class="ide-view-tabs" role="tablist" aria-label="Query output">
+                  <button class="ide-view-tab is-active" type="button" role="tab" aria-selected="true" data-ide-view="results">Results <span class="ide-results-count" id="ide-results-count">—</span></button>
+                  <button class="ide-view-tab" type="button" role="tab" aria-selected="false" data-ide-view="schema">Schema</button>
+                </div>
+                <span class="ide-elapsed" id="ide-elapsed"></span>
+              </div>
+              <div class="ide-result-scroll" id="ide-result-scroll">
+                <table class="ide-data-table" aria-label="SQL query results"><thead id="ide-result-head"></thead><tbody id="ide-result-body"></tbody></table>
+                <div class="ide-empty-state" id="ide-empty-state">Run a query to see its results here.</div>
+              </div>
+              <div class="ide-results-footer"><span id="ide-row-summary">Choose a table or run a query.</span><button class="ide-export-button" id="ide-export-results" type="button" disabled>Export CSV <span aria-hidden="true">↓</span></button></div>
+            </div>
+            <div class="ide-statusbar"><span><i></i> Local SQLite · data stays on this device</span><span id="ide-db-name">Persistent database</span></div>
+          </div>
+        </div>
+        <p class="ide-local-note"><span aria-hidden="true">⌁</span> This workspace runs locally. Start it with <code>start_queryspace.bat</code> so imports and SQL connect to your database.</p>
+      </section>
+
+      <section class="capabilities section-wrap" id="features" aria-labelledby="capabilities-title">
+        <div class="section-intro">
+          <span class="section-kicker">A better way to work with data</span>
+          <h2 id="capabilities-title">Less handoff. <span>More insight.</span></h2>
+          <p>Everything your team needs to turn raw data into shared understanding.</p>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card">
+            <div class="feature-icon icon-purple"><svg viewBox="0 0 24 24" fill="none"><path d="m8 7-5 5 5 5M16 7l5 5-5 5M14 4l-4 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <h3>Write SQL together</h3><p>Make a query a team conversation. Keep your work clear, organized, and easy to pick up.</p><a href="database.html" class="feature-link">Try the editor <span aria-hidden="true">↗</span></a>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon icon-blue"><svg viewBox="0 0 24 24" fill="none"><path d="M4 19V5m0 14h17M7 15l4-4 3 2 6-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 6h4v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <h3>See the whole picture</h3><p>Explore readable results and table structure right beside the query that produced them.</p><a href="database.html" class="feature-link">Explore results <span aria-hidden="true">↗</span></a>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon icon-pink"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3.5 20 7v5c0 4.3-3.1 7.4-8 9-4.9-1.6-8-4.7-8-9V7l8-3.5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="m8.5 12.2 2.3 2.3 4.8-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <h3>Keep context close</h3><p>Give every answer a home, so teammates can understand the thinking behind the numbers.</p><a href="#workflow" class="feature-link">See the workflow <span aria-hidden="true">↗</span></a>
+          </article>
+        </div>
+      </section>
+
+      <section class="workflow-section section-wrap" id="workflow" aria-labelledby="workflow-title">
+        <div class="workflow-copy">
+          <span class="section-kicker">From question to clarity</span>
+          <h2 id="workflow-title">A shared space for <span>better questions.</span></h2>
+          <p>Analysts and teammates can work from the same starting point, explore safely, and carry the useful answer forward.</p>
+          <a class="button button-outline" href="database.html">Take it for a spin <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="workflow-steps">
+          <article class="workflow-step"><span class="step-number">01</span><div><h3>Start with a question</h3><p>Open a query or make a fresh one in your shared workspace.</p></div><span class="step-arrow" aria-hidden="true">↗</span></article>
+          <article class="workflow-step"><span class="step-number">02</span><div><h3>Explore the answer</h3><p>Run a query and inspect results alongside your schema.</p></div><span class="step-arrow" aria-hidden="true">↗</span></article>
+          <article class="workflow-step"><span class="step-number">03</span><div><h3>Bring everyone along</h3><p>Keep the query and its context together for your team.</p></div><span class="step-arrow" aria-hidden="true">↗</span></article>
+        </div>
+      </section>
+
+      <section class="integrations-section section-wrap" id="integrations" aria-labelledby="integrations-title">
+        <span class="section-kicker">Fits your data stack</span>
+        <h2 id="integrations-title">Your tools, <span>in the conversation.</span></h2>
+        <p>Bring the warehouse and analytics tools you already use into a more collaborative workflow.</p>
+        <div class="integration-list" aria-label="Example analytics tools">
+          <div class="integration-item"><span class="integration-logo dbt-logo">dbt</span><span>dbt</span></div>
+          <div class="integration-item"><span class="integration-logo looker-logo">L</span><span>Looker</span></div>
+          <div class="integration-item"><span class="integration-logo tableau-logo">▥</span><span>Tableau</span></div>
+          <div class="integration-item"><span class="integration-logo mode-logo">M</span><span>Mode</span></div>
+          <div class="integration-item"><span class="integration-logo warehouse-logo">✳</span><span>Snowflake</span></div>
+        </div>
+      </section>
+
+      <section class="closing-cta section-wrap" id="get-started" aria-labelledby="cta-title">
+        <div class="cta-glow"></div>
+        <div class="cta-content"><span class="section-kicker">Make room for better questions</span><h2 id="cta-title">Bring your team to the <span>same page.</span></h2><p>Take the interactive SQL workspace for a spin. No sign-up required.</p><a class="button button-primary" href="database.html">Explore the demo <span aria-hidden="true">→</span></a></div>
+        <div class="cta-decoration" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="orbit-core"><span>Q</span></div><i class="orbit-star star-one">✦</i><i class="orbit-star star-two">✦</i><i class="orbit-star star-three">✧</i></div>
+      </section>
+    </main>
+
+    <footer class="site-footer" id="docs">
+      <a class="brand footer-brand" href="#top"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M6 7.5h20M6 16h13M6 24.5h9" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><circle cx="23.5" cy="22.5" r="4.5" fill="currentColor"/><path d="m27 26 2 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><span>queryspace</span></a>
+      <p>Good questions deserve a shared space.</p>
+      <div class="footer-links"><a href="#features">Product</a><a href="#integrations">Integrations</a><a href="database.html">Interactive demo</a></div>
+      <span class="copyright">© <span id="current-year">2026</span> Queryspace</span>
+    </footer>
+  </div>
+  <input id="ide-file-input" class="sr-only" type="file" accept=".csv,.tsv,.txt,.xlsx,.xlsm,.xls" aria-label="Choose a CSV or Excel file">
+  <dialog class="ide-dialog" id="ide-import-dialog" aria-labelledby="ide-import-title">
+    <form id="ide-import-form">
+      <div class="ide-dialog-head"><div><span class="section-kicker">Add data to SQLite</span><h2 id="ide-import-title">Import a file</h2></div><button class="ide-dialog-close" id="ide-import-close" type="button" aria-label="Close">×</button></div>
+      <p class="ide-dialog-description" id="ide-import-file-meta">Choose a CSV or Excel workbook to preview its columns.</p>
+      <label class="ide-field-label" for="ide-table-name">Table name</label>
+      <input class="ide-text-field" id="ide-table-name" name="table_name" required maxlength="80" autocomplete="off" placeholder="for example: spring_sales">
+      <div class="ide-worksheet-wrap" id="ide-worksheet-wrap" hidden><label class="ide-field-label" for="ide-worksheet">Excel worksheet</label><select class="ide-text-field" id="ide-worksheet" name="worksheet"></select></div>
+      <div class="ide-import-preview" id="ide-import-preview"><p class="ide-muted-message">File preview will appear here.</p></div>
+      <div class="ide-dialog-message" id="ide-import-message" role="alert"></div>
+      <div class="ide-dialog-actions"><button class="button button-outline" id="ide-import-cancel" type="button">Cancel</button><button class="button button-primary" id="ide-import-confirm" type="submit" disabled>Import table</button></div>
+    </form>
+  </dialog>
+  <dialog class="ide-dialog ide-save-dialog" id="ide-save-dialog" aria-labelledby="ide-save-title">
+    <form id="ide-save-form">
+      <div class="ide-dialog-head"><div><span class="section-kicker">Keep it for later</span><h2 id="ide-save-title">Save this query</h2></div><button class="ide-dialog-close" id="ide-save-close" type="button" aria-label="Close">×</button></div>
+      <p class="ide-dialog-description">Your query will be saved in this local database.</p>
+      <label class="ide-field-label" for="ide-save-name">Query name</label><input class="ide-text-field" id="ide-save-name" required maxlength="100" autocomplete="off" placeholder="e.g. Active customers">
+      <div class="ide-dialog-message" id="ide-save-message" role="alert"></div>
+      <div class="ide-dialog-actions"><button class="button button-outline" id="ide-save-cancel" type="button">Cancel</button><button class="button button-primary" type="submit">Save query</button></div>
+    </form>
+  </dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
