@@ -35,6 +35,7 @@
     toastTimer = setTimeout(() => ui.toast.classList.remove('is-visible'), 2600);
   }
   async function api(url, options = {}) {
+    if (window.QueryspaceBrowserDB?.enabled) return window.QueryspaceBrowserDB.request(url, options);
     const response = await fetch(apiUrl(url), { cache: 'no-store', ...options, headers: { 'Content-Type': 'application/json', ...(options.headers || {}) } });
     let data;
     try { data = await response.json(); } catch { throw new Error('The local SQL service did not return a response. Start start_queryspace.bat.'); }
@@ -43,11 +44,11 @@
   }
   function setConnected(connected, detail) {
     ui.statusDot?.classList.toggle('is-offline', !connected);
-    if (ui.statusDot) ui.statusDot.title = connected ? 'Connected to local SQLite' : 'Local database unavailable';
+    if (ui.statusDot) ui.statusDot.title = connected ? (window.QueryspaceBrowserDB?.enabled ? 'SQLite data saved in this browser' : 'Connected to local SQLite') : (window.QueryspaceBrowserDB?.enabled ? 'Browser database unavailable' : 'Local database unavailable');
     const statusLight = document.querySelector('.ide-statusbar i');
     statusLight?.classList.toggle('is-offline', !connected);
-    if (ui.dbName) ui.dbName.textContent = connected ? detail || 'queryspace.sqlite3' : 'Start start_queryspace.bat';
-    if (!connected) ui.runStatus.textContent = 'Database offline · start the local SQL service';
+    if (ui.dbName) ui.dbName.textContent = connected ? detail || (window.QueryspaceBrowserDB?.enabled ? 'Browser-local storage' : 'queryspace.sqlite3') : (window.QueryspaceBrowserDB?.enabled ? 'Browser storage unavailable' : 'Start start_queryspace.bat');
+    if (!connected) ui.runStatus.textContent = window.QueryspaceBrowserDB?.enabled ? 'Browser database unavailable' : 'Database offline · start the local SQL service';
   }
   function safeName(name) {
     return String(name || '').trim().replace(/[^\p{L}\p{N}_]+/gu, '_').replace(/^_+|_+$/g, '').slice(0, 80) || 'imported_table';
@@ -98,7 +99,7 @@
     if (!sql) { setRunStatus('Write a SQL statement first.', true); ui.query.focus(); return; }
     ui.run.disabled = true;
     ui.run.innerHTML = '<span aria-hidden="true">◌</span> Running…';
-    setRunStatus('Running against local SQLite…');
+    setRunStatus(window.QueryspaceBrowserDB?.enabled ? 'Running SQLite in this browser…' : 'Running against local SQLite…');
     ui.elapsed.textContent = '';
     const started = performance.now();
     try {
@@ -316,7 +317,7 @@
       ui.title.textContent = currentQueryName;
       ui.saveDialog.close();
       await loadSavedQueries();
-      toast(`Saved “${saved.query.name}” in this database.`);
+      toast(window.QueryspaceBrowserDB?.enabled ? `Saved “${saved.query.name}” in this browser.` : `Saved “${saved.query.name}” in this database.`);
     } catch (error) { ui.saveMessage.textContent = error.message; }
   }
   function downloadCsv() {
@@ -339,7 +340,7 @@
       await runQuery();
     } catch (error) {
       setConnected(false);
-      showData([], [], { emptyText: error.message, rowSummary: 'Local SQL service is not connected', allowExport: false });
+      showData([], [], { emptyText: error.message, rowSummary: window.QueryspaceBrowserDB?.enabled ? 'Browser-local database is not available' : 'Local SQL service is not connected', allowExport: false });
     }
   }
   ui.run.addEventListener('click', runQuery);

@@ -4,6 +4,15 @@
     ? `http://${window.location.hostname}:5502`
     : window.location.origin;
   const apiUrl = (path) => new URL(path, API_BASE).toString();
+  async function api(path, options = {}) {
+    if (window.QueryspaceBrowserDB?.enabled) return window.QueryspaceBrowserDB.request(path, options);
+    const response = await fetch(apiUrl(path), { cache: 'no-store', ...options });
+    let payload;
+    try { payload = await response.json(); }
+    catch { throw new Error('The SQL service did not return JSON.'); }
+    if (!response.ok) throw new Error(payload.error || `Request failed (${response.status}).`);
+    return payload;
+  }
   const $ = (selector, root = document) => root.querySelector(selector);
   const ui = {
     canvas: $('#db-canvas'), cards: $('#db-table-cards'), svg: $('#db-connectors'), viewport: $('#db-canvas-viewport'),
@@ -138,9 +147,7 @@
 
   async function loadDiagram() {
     try {
-      const response = await fetch(apiUrl('/api/tables'), { cache: 'no-store' });
-      const payload = await response.json();
-      if (!response.ok) throw new Error(payload.error || `Schema request failed (${response.status})`);
+      const payload = await api('/api/tables');
       tables = payload.tables || [];
       relationships = payload.relationships || [];
       renderTables();
@@ -151,7 +158,8 @@
     } catch (error) {
       ui.cards.replaceChildren();
       const empty = make('div', 'db-empty');
-      empty.append(make('strong', '', 'Could not map the database yet'), document.createTextNode(`${error.message}. Start the local Queryspace service to load the schema.`));
+      const detail = window.QueryspaceBrowserDB?.enabled ? error.message : `${error.message}. Start the local Queryspace service to load the schema.`;
+      empty.append(make('strong', '', 'Could not map the database yet'), document.createTextNode(detail));
       ui.cards.append(empty);
       ui.status.textContent = 'Database unavailable';
       ui.tableTotal.textContent = '—'; ui.relationTotal.textContent = '—';

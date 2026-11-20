@@ -4,12 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#090811">
-  <meta name="description" content="A local SQL workspace with a live database diagram, table explorer, and query editor.">
+  <meta name="description" content="A browser-based SQL workspace with sample tables, file imports, a live database diagram, and a query editor.">
   <title>Database studio — Queryspace</title>
   <link rel="stylesheet" href="style.css?v=database-studio-1">
   <link rel="stylesheet" href="database.css?v=database-studio-1">
-  <script src="workspace.js?v=api-routing-2" defer></script>
-  <script src="database.js?v=api-routing-2" defer></script>
+  <script src="browser-db.js?v=browser-demo-1" defer></script>
+  <script src="workspace.js?v=browser-demo-1" defer></script>
+  <script src="database.js?v=browser-demo-1" defer></script>
 </head>
 <body class="database-fullpage">
   <header class="db-topbar">
@@ -27,7 +28,7 @@
         <div>
           <div class="db-eyebrow"><span class="db-spark">✦</span> DATABASE STUDIO <span class="db-eyebrow-divider">/</span> QUERYSPACE LOCAL</div>
           <h1 id="db-page-title">Your data, <span>in orbit.</span></h1>
-          <p>See how tables connect, explore their columns, and run real SQL against your local database.</p>
+          <p>Explore sample tables, import a spreadsheet, and run SQL in your own browser.</p>
         </div>
         <button class="button button-primary db-import-button" id="ide-import-top" type="button"><span aria-hidden="true">＋</span> Import data</button>
       </div>
@@ -115,7 +116,7 @@ LIMIT 10;</textarea>
           </section>
         </div>
       </div>
-      <p class="ide-local-note db-local-note"><span aria-hidden="true">⌁</span> No account needed. Your data stays on this computer. <span>Press Ctrl+Enter to run a SQL query.</span></p>
+      <p class="ide-local-note db-local-note"><span aria-hidden="true">⌁</span> No account needed. Your data stays private on this device. <span>Press Ctrl+Enter to run a SQL query.</span></p>
     </section>
   </main>
 
